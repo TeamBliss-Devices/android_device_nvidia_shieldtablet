@@ -34,12 +34,15 @@ TARGET_NO_RADIOIMAGE := true
 # Kernel
 TARGET_KERNEL_SOURCE := kernel/nvidia/shieldtablet
 TARGET_KERNEL_CONFIG := cyanogenmod_shieldtablet_defconfig
-BOARD_KERNEL_CMDLINE := "androidboot.selinux=disabled"
+BOARD_KERNEL_CMDLINE := "androidboot.selinux=permissive"
 
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_USERDATAIMAGE_PARTITION_SIZE  := 12799754240
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1342177280
 BOARD_FLASH_BLOCK_SIZE := 4096
+
+# External apps on SD
+TARGET_EXTERNAL_APPS = sdcard1
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
@@ -76,11 +79,71 @@ WIFI_DRIVER_FW_PATH_PARAM        := "/sys/module/bcmdhd/parameters/firmware_path
 
 BOARD_HARDWARE_CLASS := device/nvidia/shieldtablet/cmhw/
 
-# TWRP
-DEVICE_RESOLUTION := 1200x1920
-BOARD_HAS_FLIPPED_SCREEN := true
-RECOVERY_GRAPHICS_USE_LINELENGTH := true
-BOARD_HAS_NO_REAL_SDCARD := true
-RECOVERY_SDCARD_ON_DATA := true
-TW_BRIGHTNESS_PATH := /sys/class/backlight/pwm-backlight/brightness
-TW_MAX_BRIGHTNESS := 255
+# SELinux
+BOARD_SEPOLICY_DIRS += device/nvidia/shieldtablet/sepolicy
+BOARD_SEPOLICY_UNION += \
+	te_macros \
+	app.te \
+	bluetooth.te \
+	bootanim.te \
+	cvc.te \
+	device.te \
+	domain.te \
+	drmserver.te \
+	file_contexts \
+	file.te \
+	genfs_contexts \
+	gpload.te \
+	gpsd.te \
+	hostapd.te \
+	installd.te \
+	mediaserver.te \
+	netd.te \
+	platform_app.te \
+	property_contexts \
+	property.te \
+	raydium.te \
+	recovery.te \
+	service.te \
+	service_contexts \
+	set_hwui.te \
+	shell.te \
+	surfaceflinger.te \
+	system_app.te \
+	system_server.te \
+	tee.te \
+	ueventd.te \
+	untrusted_app.te \
+	usb.te \
+	ussrd.te \
+	ussr_setup.te \
+	vold.te \
+	wifi_loader.te \
+	wpa.te \
+	zygote.te \
+	healthd.te
+
+ifneq ($(wildcard bootable/recovery-twrp/Android.mk),)
+	# TWRP
+	RECOVERY_VARIANT := twrp
+	TW_THEME := portrait_hdpi
+	TW_THEME_LANDSCAPE := landscape_hdpi
+	BOARD_HAS_FLIPPED_SCREEN := true
+	RECOVERY_GRAPHICS_USE_LINELENGTH := true
+	BOARD_HAS_NO_REAL_SDCARD := true
+	RECOVERY_SDCARD_ON_DATA := true
+	TW_BRIGHTNESS_PATH := /sys/class/backlight/pwm-backlight/brightness
+	TW_MAX_BRIGHTNESS := 255
+
+	# MultiROM
+	MR_INPUT_TYPE := type_b
+	MR_INIT_DEVICES := device/nvidia/shieldtablet/multirom/mr_init_devices.c
+	MR_DPI := xhdpi
+	MR_DPI_FONT := 323
+	MR_FSTAB := device/nvidia/shieldtablet/recovery/root/etc/twrp.fstab
+	MR_KEXEC_MEM_MIN := 0x85000000
+	MR_KEXEC_DTB := true
+	MR_DEVICE_HOOKS := device/nvidia/shieldtablet/multirom/mr_hooks.c
+	MR_DEVICE_HOOKS_VER := 3
+	MR_DEVICE_VARIANTS := shieldtablet
+endif
