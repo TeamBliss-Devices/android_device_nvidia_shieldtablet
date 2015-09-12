@@ -30,3 +30,6 @@ persist.sys.isUsbOtgEnabled=1
 
 # Widevine drm
 drm.service.enabled=true
+
+ro.product.device=shieldtablet
+ro.product.model=shieldtablet
