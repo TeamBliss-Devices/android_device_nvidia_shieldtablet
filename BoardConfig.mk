@@ -153,7 +153,7 @@ TARGET_OTA_ASSERT_DEVICE := shieldtablet,wx_na_do,wx_na_wf,wx_un_do
 
 # BlissPop Configs
 TARGET_TC_ROM := 4.9-sm
-TARGET_TC_KERNEL := 5.1-linaro
+TARGET_TC_KERNEL := 5.2-sm
 BLISSIFY := true
 BLISS_O3 := true
 BLISS_STRICT := false
